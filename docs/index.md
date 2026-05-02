@@ -12,6 +12,7 @@ title: Home
 ## 文档
 
 - [配置指南](configuration) — AI 提供商、信息源、过滤规则与环境变量替换
+- [GitHub Actions 部署](github-actions) — 定时生成日报并发布到 GitHub Pages
 - [信息源采集器](scrapers) — Horizon 如何从 GitHub、Hacker News、RSS、Reddit 采集内容
 - [评分系统](scoring) — 基于 AI 的内容分析与 0-10 评分体系
 
@@ -37,6 +38,7 @@ Welcome to [Horizon](https://github.com/thysrael/Horizon), an AI-driven informat
 ## Documentation
 
 - [Configuration Guide](configuration) — AI providers, information sources, filtering, and environment variable substitution
+- [GitHub Actions Deployment](github-actions) — Schedule daily runs and publish them to GitHub Pages
 - [Source Scrapers](scrapers) — How Horizon collects content from GitHub, Hacker News, RSS, and Reddit
 - [Scoring System](scoring) — AI-based content analysis and the 0-10 scoring scale
 

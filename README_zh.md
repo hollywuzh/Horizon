@@ -257,7 +257,9 @@ docker-compose run --rm horizon --hours 48   # 抓取最近 48 小时的内容
 
 ### 4. 自动化（可选）
 
-Horizon 非常适合作为 **GitHub Actions** 定时任务运行。查看 [`.github/workflows/daily-summary.yml`](.github/workflows/daily-summary.yml) 获取现成的工作流配置，可自动生成日报并部署到 GitHub Pages。
+Horizon 非常适合作为 **GitHub Actions** 定时任务运行。查看 [`.github/workflows/daily-summary.yml`](.github/workflows/daily-summary.yml) 获取现成的工作流配置，可每天自动生成日报并部署到 GitHub Pages。
+
+部署到你自己的仓库时，请先配置 GitHub Actions Secrets 并启用 GitHub Pages。完整步骤见 [GitHub Actions 部署指南](docs/github-actions.md)。
 
 ## 支持的信息源
 

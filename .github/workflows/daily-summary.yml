@@ -56,6 +56,8 @@ jobs:
           EMAIL_PASSWORD: ${{ secrets.EMAIL_PASSWORD }}
           HORIZON_WEBHOOK_URL: ${{ secrets.HORIZON_WEBHOOK_URL }}
           LWN_KEY: ${{ secrets.LWN_KEY }}
+	  ZAI_API_KEY: ${{ secrets.ZAI_API_KEY }}
+
         run: |
           python - <<'PY'
           import json
@@ -110,6 +112,8 @@ jobs:
           HORIZON_WEBHOOK_URL: ${{ secrets.HORIZON_WEBHOOK_URL }}
           LWN_KEY: ${{ secrets.LWN_KEY }}
           GITHUB_TOKEN: ${{ secrets.HORIZON_GITHUB_TOKEN || secrets.GITHUB_TOKEN }}
+	  ZAI_API_KEY: ${{ secrets.ZAI_API_KEY }}
+
         run: uv run --frozen horizon --hours "$HORIZON_HOURS"
 
       - name: Set current date as environment variable

@@ -2,16 +2,13 @@
   "version": "1.0",
   "ai": {
     "provider": "openai",
-    "model": "deepseek-v4-pro",
-    "base_url": "https://api.deepseek.com",
-    "api_key_env": "DEEPSEEK_API_KEY",
-    "temperature": 0.3,
+    "model": "glm-5.1",
+    "base_url": "https://api.z.ai/api/paas/v4/",
+    "api_key_env": "ZAI_API_KEY",
+    "temperature": 0.6,
     "max_tokens": 8192,
-    "languages": [
-      "zh",
-      "en"
-    ]
-  },
+    "languages": ["zh", "en"]
+  }
   "sources": {
     "github": [
       {

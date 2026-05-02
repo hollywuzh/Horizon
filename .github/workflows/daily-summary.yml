@@ -99,7 +99,7 @@ jobs:
       - name: Install dependencies
         run: |
           uv --version
-          uv sync --frozen
+          uv sync
 
       - name: Run Horizon
         env:
@@ -117,7 +117,7 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.HORIZON_GITHUB_TOKEN || secrets.GITHUB_TOKEN }}
           ZAI_API_KEY: ${{ secrets.ZAI_API_KEY }}
 
-        run: uv run --frozen horizon --hours "$HORIZON_HOURS"
+        run: uv run horizon --hours "$HORIZON_HOURS"
 
       - name: Set current date as environment variable
         run: echo "DATE=$(date -u +'%Y-%m-%d')" >> "$GITHUB_ENV"

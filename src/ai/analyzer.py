@@ -53,7 +53,9 @@ class ContentAnalyzer:
                     await self._analyze_item(item)
                     analyzed_items.append(item)
                 except Exception as e:
-                    print(f"Error analyzing item {item.id}: {type(e).__name__}: {e!r}")
+                    error_text = f"{type(e).__name__}: {e!r}"
+                    print(f"Error analyzing item {item.id}: {error_text}")
+                    item.metadata["analysis_error"] = error_text[:500]
                     item.ai_score = 0.0
                     item.ai_reason = "Analysis failed"
                     item.ai_summary = item.title
@@ -142,6 +144,7 @@ class ContentAnalyzer:
                 f"Warning: could not parse analysis response for {item.id}; "
                 f"response starts: {snippet!r}"
             )
+            item.metadata["analysis_response_sample"] = snippet
             item.ai_score = 0.0
             item.ai_reason = "Analysis response parse failed"
             item.ai_summary = item.title

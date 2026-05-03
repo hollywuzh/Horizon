@@ -1,7 +1,7 @@
 """Main orchestrator coordinating the entire workflow."""
 
 import asyncio
-from collections import defaultdict
+from collections import Counter, defaultdict
 from datetime import datetime, timedelta, timezone
 from typing import List, Dict
 from urllib.parse import urlparse
@@ -87,9 +87,21 @@ class HorizonOrchestrator:
                 if item.ai_reason in {"Analysis failed", "Analysis response parse failed"}
             ]
             if analyzed_items and len(failed_analysis) == len(analyzed_items):
+                failure_counts = Counter(item.ai_reason for item in failed_analysis)
+                examples = []
+                for item in failed_analysis[:3]:
+                    detail = (
+                        item.metadata.get("analysis_error")
+                        or item.metadata.get("analysis_response_sample")
+                        or "no detail captured"
+                    )
+                    examples.append(f"- {item.title}: {detail}")
+                details = "\n".join(examples)
                 raise RuntimeError(
                     "AI analysis failed for every fetched item; check the model endpoint, "
-                    "API key, and JSON response compatibility before publishing."
+                    "API key, and JSON response compatibility before publishing.\n"
+                    f"Failure breakdown: {dict(failure_counts)}\n"
+                    f"Examples:\n{details}"
                 )
 
             # 5. Rank by AI score, then keep the daily top-N after topic deduplication.

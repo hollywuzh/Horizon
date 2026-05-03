@@ -101,6 +101,56 @@ jobs:
           uv --version
           uv sync
 
+      - name: Smoke test AI endpoint
+        env:
+          OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
+          DEEPSEEK_API_KEY: ${{ secrets.DEEPSEEK_API_KEY }}
+          ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
+          GOOGLE_API_KEY: ${{ secrets.GOOGLE_API_KEY }}
+          MINIMAX_API_KEY: ${{ secrets.MINIMAX_API_KEY }}
+          DASHSCOPE_API_KEY: ${{ secrets.DASHSCOPE_API_KEY }}
+          DOUBAO_API_KEY: ${{ secrets.DOUBAO_API_KEY }}
+          ZAI_API_KEY: ${{ secrets.ZAI_API_KEY }}
+        run: |
+          uv run python - <<'PY'
+          import asyncio
+          import json
+          import sys
+
+          from src.ai.client import create_ai_client
+          from src.models import Config
+
+          config = Config.model_validate_json(open("data/config.json", encoding="utf-8").read())
+
+          async def main():
+              client = create_ai_client(config.ai)
+              try:
+                  response = await client.complete(
+                      system="You are a JSON-only health check.",
+                      user='Return exactly this JSON object: {"ok": true}',
+                      temperature=0.1,
+                      max_tokens=128,
+                  )
+              except Exception as exc:
+                  print(f"::error title=AI endpoint smoke test failed::{type(exc).__name__}: {exc}")
+                  raise
+
+              print("AI smoke response starts:", repr(str(response)[:500]))
+              try:
+                  parsed = json.loads(str(response))
+              except json.JSONDecodeError as exc:
+                  print(f"::error title=AI endpoint returned non-JSON::Could not parse model response: {exc}")
+                  sys.exit(1)
+
+              if parsed.get("ok") is not True:
+                  print("::error title=AI endpoint returned unexpected JSON::" + json.dumps(parsed)[:500])
+                  sys.exit(1)
+
+              print(f"AI endpoint smoke test passed: {config.ai.provider.value}/{config.ai.model}")
+
+          asyncio.run(main())
+          PY
+
       - name: Run Horizon
         env:
           OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}

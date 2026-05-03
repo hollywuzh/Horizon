@@ -169,6 +169,7 @@ class OpenAIClient(AIClient):
             "thinking",
             "temperature",
             "max_tokens",
+            "response_format",
         )
         return any(marker in text for marker in markers)
 
@@ -215,6 +216,7 @@ class OpenAIClient(AIClient):
             ],
             "temperature": temperature,
             "max_tokens": max_tokens,
+            "response_format": {"type": "json_object"},
         }
         if self.is_zai:
             # GLM-5.1 can spend output budget on thinking; disable it for strict JSON tasks.

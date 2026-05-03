@@ -83,26 +83,30 @@ class HorizonOrchestrator:
             analyzed_items = await self._analyze_content(merged_items)
             self.console.print(f"🤖 Analyzed {len(analyzed_items)} items with AI\n")
 
-            # 5. Filter by score threshold
-            threshold = self.config.filtering.ai_score_threshold
-            important_items = [
-                item for item in analyzed_items
-                if item.ai_score and item.ai_score >= threshold
-            ]
-            important_items.sort(key=lambda x: x.ai_score or 0, reverse=True)
+            # 5. Rank by AI score, then keep the daily top-N after topic deduplication.
+            top_n = max(1, self.config.filtering.daily_top_items)
+            ranked_items = sorted(
+                analyzed_items,
+                key=lambda item: item.ai_score if item.ai_score is not None else -1,
+                reverse=True,
+            )
+            candidate_limit = min(len(ranked_items), max(top_n * 3, top_n))
+            candidate_items = ranked_items[:candidate_limit]
 
             self.console.print(
-                f"⭐️ {len(important_items)} items scored ≥ {threshold}\n"
+                f"⭐️ Selecting top {top_n} items from {len(ranked_items)} analyzed items "
+                f"(dedup candidate pool: {len(candidate_items)})\n"
             )
 
-            # 5.5 Semantic deduplication: drop items covering the same topic
-            deduped_items = await self.merge_topic_duplicates(important_items)
-            if len(deduped_items) < len(important_items):
+            # 5.5 Semantic deduplication: drop items covering the same topic.
+            deduped_items = await self.merge_topic_duplicates(candidate_items)
+            if len(deduped_items) < len(candidate_items):
                 self.console.print(
-                    f"🧹 Removed {len(important_items) - len(deduped_items)} topic duplicates "
+                    f"🧹 Removed {len(candidate_items) - len(deduped_items)} topic duplicates "
                     f"→ {len(deduped_items)} unique items\n"
                 )
-            important_items = deduped_items
+            important_items = deduped_items[:top_n]
+            self.console.print(f"📌 Selected {len(important_items)} daily top items\n")
 
             # 5.6 Optional second-stage Twitter reply expansion + targeted re-analysis
             await self._expand_twitter_discussion(important_items)

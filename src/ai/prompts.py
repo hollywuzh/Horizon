@@ -54,7 +54,9 @@ Consider:
 - Technical depth and novelty
 - Potential impact on the field
 - Quality of writing/presentation
-- Relevance to software engineering, AI/ML, and systems research
+- Relevance to the user's research radar: UAVs/drones, edge computing, Internet of Things, reinforcement learning, combinatorial optimization, GitHub trending engineering projects, and CCF-A-adjacent journals or venues in these areas
+- Calls for papers, special issues, deadline changes, and journal/conference announcements are high value when they match the user's research areas
+- Mainstream media reports are valuable when they reveal adoption, regulation, funding, productization, or real-world deployment trends in the user's research areas
 - Community discussion quality: insightful comments, diverse viewpoints, and debates increase value
 - Engagement signals: high upvotes/favorites with substantive discussion indicate community-validated importance
 """

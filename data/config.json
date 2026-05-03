@@ -12,26 +12,39 @@
   "sources": {
     "github": [
       {
-        "type": "user_events",
-        "username": "karpathy",
+        "type": "repo_releases",
+        "owner": "PX4",
+        "repo": "PX4-Autopilot",
+        "enabled": true
+      },
+      {
+        "type": "repo_releases",
+        "owner": "ArduPilot",
+        "repo": "ardupilot",
+        "enabled": true
+      },
+      {
+        "type": "repo_releases",
+        "owner": "microsoft",
+        "repo": "onnxruntime",
+        "enabled": true
+      },
+      {
+        "type": "repo_releases",
+        "owner": "ggml-org",
+        "repo": "llama.cpp",
+        "enabled": true
+      },
+      {
+        "type": "repo_releases",
+        "owner": "k3s-io",
+        "repo": "k3s",
         "enabled": true
       },
       {
         "type": "repo_releases",
         "owner": "vllm-project",
         "repo": "vllm",
-        "enabled": true
-      },
-      {
-        "type": "repo_releases",
-        "owner": "sgl-project",
-        "repo": "sglang",
-        "enabled": true
-      },
-      {
-        "type": "repo_releases",
-        "owner": "triton-lang",
-        "repo": "triton",
         "enabled": true
       }
     ],
@@ -42,30 +55,124 @@
     },
     "rss": [
       {
-        "name": "Simon Willison",
-        "url": "https://simonwillison.net/atom/everything/",
+        "name": "Google News - UAV and Drone Systems",
+        "url": "https://news.google.com/rss/search?q=%28UAV%20OR%20drone%20OR%20drones%20OR%20%22unmanned%20aerial%20vehicle%22%29%20%28research%20OR%20industry%20OR%20regulation%20OR%20edge%20OR%20AI%29&hl=en-US&gl=US&ceid=US:en",
         "enabled": true,
-        "category": "ai-tools"
+        "category": "uav-drone-media",
+        "fetch_limit": 12
+      },
+      {
+        "name": "Google News - Edge Computing and IoT",
+        "url": "https://news.google.com/rss/search?q=%28%22edge%20computing%22%20OR%20%22edge%20AI%22%20OR%20IoT%20OR%20%22Internet%20of%20Things%22%29%20%28research%20OR%20deployment%20OR%20industry%20OR%20security%29&hl=en-US&gl=US&ceid=US:en",
+        "enabled": true,
+        "category": "edge-iot-media",
+        "fetch_limit": 12
+      },
+      {
+        "name": "Google News - Reinforcement Learning",
+        "url": "https://news.google.com/rss/search?q=%28%22reinforcement%20learning%22%20OR%20RL%29%20%28research%20OR%20robotics%20OR%20optimization%20OR%20control%20OR%20AI%29&hl=en-US&gl=US&ceid=US:en",
+        "enabled": true,
+        "category": "rl-media",
+        "fetch_limit": 12
+      },
+      {
+        "name": "Google News - Combinatorial Optimization",
+        "url": "https://news.google.com/rss/search?q=%28%22combinatorial%20optimization%22%20OR%20%22integer%20programming%22%20OR%20%22vehicle%20routing%22%20OR%20%22graph%20optimization%22%29%20%28AI%20OR%20learning%20OR%20solver%20OR%20algorithm%29&hl=en-US&gl=US&ceid=US:en",
+        "enabled": true,
+        "category": "combinatorial-optimization-media",
+        "fetch_limit": 12
+      },
+      {
+        "name": "Google News - Research CFP and Special Issues",
+        "url": "https://news.google.com/rss/search?q=%28%22call%20for%20papers%22%20OR%20CFP%20OR%20%22special%20issue%22%20OR%20%22submission%20deadline%22%29%20%28UAV%20OR%20drone%20OR%20%22edge%20computing%22%20OR%20IoT%20OR%20%22reinforcement%20learning%22%20OR%20%22combinatorial%20optimization%22%29&hl=en-US&gl=US&ceid=US:en",
+        "enabled": true,
+        "category": "cfp",
+        "fetch_limit": 15
+      },
+      {
+        "name": "Google News - CCF A Related Journals",
+        "url": "https://news.google.com/rss/search?q=%28%22IEEE%20Transactions%20on%20Mobile%20Computing%22%20OR%20%22IEEE%2FACM%20Transactions%20on%20Networking%22%20OR%20%22IEEE%20Transactions%20on%20Parallel%20and%20Distributed%20Systems%22%20OR%20%22IEEE%20Transactions%20on%20Pattern%20Analysis%20and%20Machine%20Intelligence%22%20OR%20JMLR%29%20%28%22special%20issue%22%20OR%20%22call%20for%20papers%22%20OR%20deadline%20OR%20accepted%20OR%20published%29&hl=en-US&gl=US&ceid=US:en",
+        "enabled": true,
+        "category": "ccf-a-journal",
+        "fetch_limit": 15
       },
       {
         "name": "GitHub Trending - Daily",
         "url": "https://mshibanami.github.io/GitHubTrendingRSS/daily/all.xml",
         "enabled": true,
-        "category": "github-trending"
+        "category": "github-trending",
+        "fetch_limit": 20
       },
       {
-        "name": "LWN.net",
-        "url": "https://lwn.net/headlines/full_text?key=${LWN_KEY}",
-        "enabled": false,
-        "category": "linux-kernel"
+        "name": "arXiv cs.RO Robotics",
+        "url": "https://rss.arxiv.org/rss/cs.RO",
+        "enabled": true,
+        "category": "paper-uav-robotics",
+        "fetch_limit": 8
+      },
+      {
+        "name": "arXiv cs.NI Networking and Internet Architecture",
+        "url": "https://rss.arxiv.org/rss/cs.NI",
+        "enabled": true,
+        "category": "paper-edge-iot-networking",
+        "fetch_limit": 8
+      },
+      {
+        "name": "arXiv cs.LG Machine Learning",
+        "url": "https://rss.arxiv.org/rss/cs.LG",
+        "enabled": true,
+        "category": "paper-rl-ml",
+        "fetch_limit": 8
+      },
+      {
+        "name": "arXiv cs.AI Artificial Intelligence",
+        "url": "https://rss.arxiv.org/rss/cs.AI",
+        "enabled": true,
+        "category": "paper-ai",
+        "fetch_limit": 8
+      },
+      {
+        "name": "arXiv cs.DS Data Structures and Algorithms",
+        "url": "https://rss.arxiv.org/rss/cs.DS",
+        "enabled": true,
+        "category": "paper-combinatorial-optimization",
+        "fetch_limit": 8
+      },
+      {
+        "name": "arXiv math.OC Optimization and Control",
+        "url": "https://rss.arxiv.org/rss/math.OC",
+        "enabled": true,
+        "category": "paper-optimization-control",
+        "fetch_limit": 8
+      },
+      {
+        "name": "BAIR Blog",
+        "url": "https://bair.berkeley.edu/blog/feed.xml",
+        "enabled": true,
+        "category": "technical-blog-rl-robotics",
+        "fetch_limit": 8
+      },
+      {
+        "name": "Hugging Face Blog",
+        "url": "https://huggingface.co/blog/feed.xml",
+        "enabled": true,
+        "category": "technical-blog-ai",
+        "fetch_limit": 8
+      },
+      {
+        "name": "Simon Willison",
+        "url": "https://simonwillison.net/atom/everything/",
+        "enabled": true,
+        "category": "technical-blog-ai-tools",
+        "fetch_limit": 8
       }
     ],
     "reddit": {
-      "enabled": true,
+      "enabled": false,
       "subreddits": [
         {
           "subreddit": "MachineLearning",
-          "enabled": true,
+          "enabled": false,
           "sort": "hot",
           "time_filter": "day",
           "fetch_limit": 15,
@@ -73,7 +180,7 @@
         },
         {
           "subreddit": "LocalLLaMA",
-          "enabled": true,
+          "enabled": false,
           "sort": "hot",
           "time_filter": "day",
           "fetch_limit": 15,
@@ -84,11 +191,11 @@
       "fetch_comments": 10
     },
     "telegram": {
-      "enabled": true,
+      "enabled": false,
       "channels": [
         {
           "channel": "zaihuapd",
-          "enabled": true,
+          "enabled": false,
           "fetch_limit": 20
         }
       ]
@@ -107,8 +214,9 @@
     }
   },
   "filtering": {
-    "ai_score_threshold": 8.0,
-    "time_window_hours": 24
+    "ai_score_threshold": 6.0,
+    "time_window_hours": 72,
+    "daily_top_items": 10
   },
   "webhook": {
     "enabled": false,

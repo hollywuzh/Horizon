@@ -9,7 +9,7 @@ on:
       hours:
         description: "Fetch content from the last N hours"
         required: true
-        default: 24
+        default: 72
         type: number
 
 concurrency:
@@ -22,7 +22,7 @@ jobs:
     permissions:
       contents: write
     env:
-      HORIZON_HOURS: ${{ github.event.inputs.hours || '24' }}
+      HORIZON_HOURS: ${{ github.event.inputs.hours || '72' }}
 
     steps:
       - name: Checkout code

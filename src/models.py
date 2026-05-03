@@ -84,6 +84,7 @@ class RSSSourceConfig(BaseModel):
     url: HttpUrl
     enabled: bool = True
     category: Optional[str] = None
+    fetch_limit: int = 20
 
 
 class RedditSubredditConfig(BaseModel):
@@ -183,6 +184,7 @@ class FilteringConfig(BaseModel):
 
     ai_score_threshold: float = 7.0
     time_window_hours: int = 24
+    daily_top_items: int = 10
 
 
 class Config(BaseModel):

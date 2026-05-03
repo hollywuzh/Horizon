@@ -28,11 +28,11 @@ LABELS = {
         "empty_body": (
             "No significant developments today. This might indicate:\n"
             "- A quiet day in your tracked sources\n"
-            "- The AI score threshold is too high\n"
-            "- Your information sources need expansion\n\n"
+            "- Your information sources need expansion\n"
+            "- The AI model could not analyze the fetched items\n\n"
             "Consider:\n"
-            "1. Lowering the `ai_score_threshold` in config.json\n"
-            "2. Adding more diverse information sources\n"
+            "1. Adding more diverse information sources\n"
+            "2. Increasing `time_window_hours` in config.json\n"
             "3. Checking if the AI model is working correctly\n"
         ),
     },
@@ -46,11 +46,11 @@ LABELS = {
         "empty_body": (
             "今日暂无重要动态，可能原因：\n"
             "- 今天关注的信息源较平静\n"
-            "- AI 评分阈值设置过高\n"
-            "- 信息源种类有待扩充\n\n"
+            "- 信息源种类有待扩充\n"
+            "- AI 模型未能正常分析抓取内容\n\n"
             "建议：\n"
-            "1. 在 config.json 中降低 `ai_score_threshold`\n"
-            "2. 添加更多多样化的信息源\n"
+            "1. 添加更多多样化的信息源\n"
+            "2. 在 config.json 中增加 `time_window_hours`\n"
             "3. 检查 AI 模型是否正常工作\n"
         ),
     },

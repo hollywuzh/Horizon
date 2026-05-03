@@ -5,8 +5,9 @@
     "model": "glm-5.1",
     "base_url": "https://api.z.ai/api/paas/v4/",
     "api_key_env": "ZAI_API_KEY",
-    "temperature": 0.6,
-    "max_tokens": 8192,
+    "temperature": 0.3,
+    "max_tokens": 4096,
+    "throttle_sec": 0.2,
     "languages": ["zh", "en"]
   },
   "sources": {

@@ -103,7 +103,7 @@ class HorizonOrchestrator:
             candidate_items = self._select_diverse_top_items(
                 ranked_items,
                 candidate_limit,
-                max_per_bucket=3,
+                max_per_bucket=2,
             )
 
             self.console.print(
@@ -118,7 +118,7 @@ class HorizonOrchestrator:
                     f"🧹 Removed {len(candidate_items) - len(deduped_items)} topic duplicates "
                     f"→ {len(deduped_items)} unique items\n"
                 )
-            important_items = self._select_diverse_top_items(deduped_items, top_n)
+            important_items = self._select_diverse_top_items(deduped_items, top_n, max_per_bucket=1)
             self.console.print(f"📌 Selected {len(important_items)} daily top items\n")
 
             # 5.6 Optional second-stage Twitter reply expansion + targeted re-analysis

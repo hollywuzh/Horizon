@@ -81,7 +81,9 @@ Respond with valid JSON only:
   "reason": "<explanation>",
   "summary": "<one-sentence-summary>",
   "tags": ["<tag1>", "<tag2>", ...]
-}}"""
+}}
+
+Do not include Markdown, code fences, analysis, or any text outside the JSON object."""
 
 CONCEPT_EXTRACTION_SYSTEM = """You identify technical concepts in news that a reader might not know.
 Given a news item, return 1-3 search queries for concepts that need explanation.

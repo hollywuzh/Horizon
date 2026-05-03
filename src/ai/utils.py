@@ -2,15 +2,43 @@
 
 import json
 import re
-from typing import Optional
+from typing import Any, Optional
 
 
-def parse_json_response(response: str) -> Optional[dict]:
+def _response_to_text(response: Any) -> str:
+    """Normalize common SDK response-content shapes into text."""
+    if response is None:
+        return ""
+    if isinstance(response, str):
+        return response
+    if isinstance(response, list):
+        parts = []
+        for part in response:
+            if isinstance(part, str):
+                parts.append(part)
+            elif isinstance(part, dict):
+                value = part.get("text") or part.get("content")
+                if isinstance(value, str):
+                    parts.append(value)
+            else:
+                value = getattr(part, "text", None) or getattr(part, "content", None)
+                if isinstance(value, str):
+                    parts.append(value)
+        return "\n".join(parts)
+    return str(response)
+
+
+def parse_json_response(response: Any) -> Optional[dict]:
     """Try multiple strategies to extract a JSON object from an AI response.
 
     Returns the parsed dict, or None if all strategies fail.
     """
-    text = response.strip()
+    if isinstance(response, dict):
+        return response
+
+    text = _response_to_text(response).strip()
+    if not text:
+        return None
 
     # Strategy 1: direct parse
     try:

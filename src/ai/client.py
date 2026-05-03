@@ -2,7 +2,7 @@
 
 import os
 from abc import ABC, abstractmethod
-from typing import Optional
+from typing import Any, Dict, Optional
 
 from anthropic import AsyncAnthropic
 from openai import AsyncOpenAI
@@ -123,6 +123,68 @@ class OpenAIClient(AIClient):
         self.model = config.model
         self.temperature = config.temperature
         self.max_tokens = config.max_tokens
+        self.is_zai = self._is_zai_endpoint(config.base_url)
+
+    @staticmethod
+    def _is_zai_endpoint(base_url: Optional[str]) -> bool:
+        """Return True for Z.AI's OpenAI-compatible endpoint."""
+        return bool(base_url and "api.z.ai" in base_url.lower())
+
+    @staticmethod
+    def _message_content_to_text(content: Any) -> str:
+        """Normalize SDK message content into plain text."""
+        if content is None:
+            return ""
+        if isinstance(content, str):
+            return content
+        if isinstance(content, list):
+            parts = []
+            for part in content:
+                if isinstance(part, str):
+                    parts.append(part)
+                elif isinstance(part, dict):
+                    value = part.get("text") or part.get("content")
+                    if isinstance(value, str):
+                        parts.append(value)
+                else:
+                    value = getattr(part, "text", None) or getattr(part, "content", None)
+                    if isinstance(value, str):
+                        parts.append(value)
+            return "\n".join(parts)
+        return str(content)
+
+    @staticmethod
+    def _should_retry_minimal(exc: Exception) -> bool:
+        """Retry once without provider-specific options for parameter errors."""
+        status_code = getattr(exc, "status_code", None)
+        if status_code not in {400, 422}:
+            return False
+        text = str(exc).lower()
+        markers = (
+            "unsupported",
+            "unknown",
+            "invalid",
+            "unrecognized",
+            "extra_body",
+            "thinking",
+            "temperature",
+            "max_tokens",
+        )
+        return any(marker in text for marker in markers)
+
+    async def _create_chat_completion(self, request_kwargs: Dict[str, Any]):
+        try:
+            return await self.client.chat.completions.create(**request_kwargs)
+        except Exception as exc:
+            if not self._should_retry_minimal(exc):
+                raise
+            minimal_kwargs = {
+                "model": request_kwargs["model"],
+                "messages": request_kwargs["messages"],
+            }
+            if request_kwargs.get("max_tokens") is not None:
+                minimal_kwargs["max_tokens"] = request_kwargs["max_tokens"]
+            return await self.client.chat.completions.create(**minimal_kwargs)
 
     async def complete(
         self,
@@ -145,23 +207,28 @@ class OpenAIClient(AIClient):
         temperature = self.temperature if temperature is None else temperature
         max_tokens = self.max_tokens if max_tokens is None else max_tokens
 
-        response = await self.client.chat.completions.create(
-            model=self.model,
-            messages=[
+        request_kwargs: Dict[str, Any] = {
+            "model": self.model,
+            "messages": [
                 {"role": "system", "content": system},
                 {"role": "user", "content": user}
             ],
-            temperature=temperature,
-            max_tokens=max_tokens,
-        )
+            "temperature": temperature,
+            "max_tokens": max_tokens,
+        }
+        if self.is_zai:
+            # GLM-5.1 can spend output budget on thinking; disable it for strict JSON tasks.
+            request_kwargs["extra_body"] = {"thinking": {"type": "disabled"}}
+
+        response = await self._create_chat_completion(request_kwargs)
         usage = getattr(response, "usage", None)
         if usage is not None:
             record_usage(
-                "openai",
+                "zai" if self.is_zai else "openai",
                 input_tokens=getattr(usage, "prompt_tokens", 0),
                 output_tokens=getattr(usage, "completion_tokens", 0),
             )
-        return response.choices[0].message.content
+        return self._message_content_to_text(response.choices[0].message.content)
 
 
 class MiniMaxClient(AIClient):

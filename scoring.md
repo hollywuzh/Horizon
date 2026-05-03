@@ -39,13 +39,14 @@ Engagement metadata is source-specific: HN provides score and comment count, Red
 
 ## Filtering
 
-After scoring, items are filtered by `filtering.ai_score_threshold` (default: `7.0`) and sorted by score descending. Only items meeting the threshold appear in the daily summary.
+After scoring, items are sorted by score descending. Horizon then deduplicates the highest-scoring candidate pool and publishes the top `filtering.daily_top_items` entries. `ai_score_threshold` is kept for compatibility with older MCP/filtering workflows, but the daily briefing uses the top-N selection strategy.
 
 ```json
 {
   "filtering": {
     "ai_score_threshold": 7.0,
-    "time_window_hours": 24
+    "time_window_hours": 24,
+    "daily_top_items": 10
   }
 }
 ```
@@ -54,7 +55,7 @@ Items scoring 9.0 or above are featured in the "Today's Highlights" section of t
 
 ## Enrichment
 
-Items that pass the score threshold go through a second AI pass for enrichment (`src/ai/enricher.py`):
+Selected top-N items go through a second AI pass for enrichment (`src/ai/enricher.py`):
 
 1. **Concept extraction** — AI identifies 1-3 technical concepts in the item that may need explanation.
 2. **Web search** — Each concept is searched via DuckDuckGo to gather grounding context.

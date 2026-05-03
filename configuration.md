@@ -145,12 +145,15 @@ All sources are configured under the top-level `sources` key in `config.json`.
         "name": "Blog Name",
         "url": "https://example.com/feed.xml",
         "enabled": true,
-        "category": "ai-ml"
+        "category": "ai-ml",
+        "fetch_limit": 20
       }
     ]
   }
 }
 ```
+
+- `fetch_limit`: Maximum recent entries to keep from this feed after the time-window filter. Use this to keep broad feeds such as arXiv or Google News cost-controlled.
 
 ### Reddit
 
@@ -223,13 +226,15 @@ Content is scored 0-10:
 {
   "filtering": {
     "ai_score_threshold": 7.0,
-    "time_window_hours": 24
+    "time_window_hours": 24,
+    "daily_top_items": 10
   }
 }
 ```
 
-- `ai_score_threshold`: Only include content scoring >= this value
+- `ai_score_threshold`: Compatibility threshold for explicit filtering workflows; the scheduled daily briefing uses top-N selection
 - `time_window_hours`: Fetch content from last N hours
+- `daily_top_items`: Number of top-ranked items to publish in each daily briefing
 
 ## Environment Variable Substitution
 

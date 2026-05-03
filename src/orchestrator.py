@@ -82,6 +82,15 @@ class HorizonOrchestrator:
             # 4. Analyze with AI
             analyzed_items = await self._analyze_content(merged_items)
             self.console.print(f"🤖 Analyzed {len(analyzed_items)} items with AI\n")
+            failed_analysis = [
+                item for item in analyzed_items
+                if item.ai_reason in {"Analysis failed", "Analysis response parse failed"}
+            ]
+            if analyzed_items and len(failed_analysis) == len(analyzed_items):
+                raise RuntimeError(
+                    "AI analysis failed for every fetched item; check the model endpoint, "
+                    "API key, and JSON response compatibility before publishing."
+                )
 
             # 5. Rank by AI score, then keep the daily top-N after topic deduplication.
             top_n = max(1, self.config.filtering.daily_top_items)
@@ -90,8 +99,12 @@ class HorizonOrchestrator:
                 key=lambda item: item.ai_score if item.ai_score is not None else -1,
                 reverse=True,
             )
-            candidate_limit = min(len(ranked_items), max(top_n * 3, top_n))
-            candidate_items = ranked_items[:candidate_limit]
+            candidate_limit = min(len(ranked_items), max(top_n * 4, top_n))
+            candidate_items = self._select_diverse_top_items(
+                ranked_items,
+                candidate_limit,
+                max_per_bucket=3,
+            )
 
             self.console.print(
                 f"⭐️ Selecting top {top_n} items from {len(ranked_items)} analyzed items "
@@ -105,7 +118,7 @@ class HorizonOrchestrator:
                     f"🧹 Removed {len(candidate_items) - len(deduped_items)} topic duplicates "
                     f"→ {len(deduped_items)} unique items\n"
                 )
-            important_items = deduped_items[:top_n]
+            important_items = self._select_diverse_top_items(deduped_items, top_n)
             self.console.print(f"📌 Selected {len(important_items)} daily top items\n")
 
             # 5.6 Optional second-stage Twitter reply expansion + targeted re-analysis
@@ -446,6 +459,45 @@ class HorizonOrchestrator:
                 drop_indices.add(dup_idx)
 
         return [item for i, item in enumerate(items) if i not in drop_indices]
+
+    def _select_diverse_top_items(
+        self,
+        items: List[ContentItem],
+        limit: int,
+        max_per_bucket: int = 2,
+    ) -> List[ContentItem]:
+        """Select top-ranked items while preventing one source from dominating."""
+        selected: List[ContentItem] = []
+        overflow: List[ContentItem] = []
+        bucket_counts: Dict[str, int] = defaultdict(int)
+
+        for item in items:
+            bucket = self._diversity_bucket(item)
+            if bucket_counts[bucket] < max_per_bucket:
+                selected.append(item)
+                bucket_counts[bucket] += 1
+            else:
+                overflow.append(item)
+            if len(selected) >= limit:
+                return selected
+
+        # If the day is quiet and diversity filtering leaves room, backfill by score.
+        for item in overflow:
+            selected.append(item)
+            if len(selected) >= limit:
+                break
+
+        return selected
+
+    @staticmethod
+    def _diversity_bucket(item: ContentItem) -> str:
+        """Return a bucket key used to cap repeated items from one feed or repo."""
+        meta = item.metadata
+        for key in ("repo", "feed_name", "subreddit", "channel"):
+            value = meta.get(key)
+            if value:
+                return f"{item.source_type.value}:{value}"
+        return f"{item.source_type.value}:{item.author or 'unknown'}"
 
     async def _expand_twitter_discussion(self, items: List[ContentItem]) -> None:
         """Second-stage: fetch reply text for important Twitter items and re-analyze.

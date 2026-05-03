@@ -153,7 +153,6 @@ class OpenAIClient(AIClient):
             ],
             temperature=temperature,
             max_tokens=max_tokens,
-            response_format={"type": "json_object"}
         )
         usage = getattr(response, "usage", None)
         if usage is not None:
@@ -290,7 +289,6 @@ class AliClient(AIClient):
             ],
             temperature=temperature,
             max_tokens=max_tokens,
-            response_format={"type": "json_object"}
         )
         return response.choices[0].message.content
 

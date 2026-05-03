@@ -25,14 +25,14 @@
       },
       {
         "type": "repo_releases",
-        "owner": "microsoft",
-        "repo": "onnxruntime",
+        "owner": "kubeedge",
+        "repo": "kubeedge",
         "enabled": true
       },
       {
         "type": "repo_releases",
-        "owner": "ggml-org",
-        "repo": "llama.cpp",
+        "owner": "edgexfoundry",
+        "repo": "edgex-go",
         "enabled": true
       },
       {
@@ -43,8 +43,8 @@
       },
       {
         "type": "repo_releases",
-        "owner": "vllm-project",
-        "repo": "vllm",
+        "owner": "eclipse",
+        "repo": "kura",
         "enabled": true
       }
     ],
@@ -55,11 +55,18 @@
     },
     "rss": [
       {
-        "name": "Google News - UAV and Drone Systems",
-        "url": "https://news.google.com/rss/search?q=%28UAV%20OR%20drone%20OR%20drones%20OR%20%22unmanned%20aerial%20vehicle%22%29%20%28research%20OR%20industry%20OR%20regulation%20OR%20edge%20OR%20AI%29&hl=en-US&gl=US&ceid=US:en",
+        "name": "Google News - UAV and IoT Applications",
+        "url": "https://news.google.com/rss/search?q=%28UAV%20OR%20drone%20OR%20drones%20OR%20%22unmanned%20aerial%20vehicle%22%29%20%28IoT%20OR%20%22Internet%20of%20Things%22%20OR%20%22edge%20computing%22%20OR%20%22smart%20city%22%20OR%20%22smart%20agriculture%22%20OR%20inspection%20OR%20logistics%20OR%20delivery%29&hl=en-US&gl=US&ceid=US:en",
         "enabled": true,
-        "category": "uav-drone-media",
-        "fetch_limit": 12
+        "category": "uav-iot-application-media",
+        "fetch_limit": 15
+      },
+      {
+        "name": "Google News CN - 无人机物联网应用",
+        "url": "https://news.google.com/rss/search?q=%E6%97%A0%E4%BA%BA%E6%9C%BA%20%28%E7%89%A9%E8%81%94%E7%BD%91%20OR%20%E8%BE%B9%E7%BC%98%E8%AE%A1%E7%AE%97%20OR%20%E6%99%BA%E6%85%A7%E5%86%9C%E4%B8%9A%20OR%20%E5%B7%A1%E6%A3%80%20OR%20%E7%89%A9%E6%B5%81%20OR%20%E5%BA%94%E7%94%A8%29&hl=zh-CN&gl=CN&ceid=CN:zh-Hans",
+        "enabled": true,
+        "category": "uav-iot-application-media-cn",
+        "fetch_limit": 15
       },
       {
         "name": "Google News - Edge Computing and IoT",
@@ -67,6 +74,13 @@
         "enabled": true,
         "category": "edge-iot-media",
         "fetch_limit": 12
+      },
+      {
+        "name": "Google News CN - 边缘计算物联网应用",
+        "url": "https://news.google.com/rss/search?q=%28%E8%BE%B9%E7%BC%98%E8%AE%A1%E7%AE%97%20OR%20%E8%BE%B9%E7%BC%98AI%20OR%20%E7%89%A9%E8%81%94%E7%BD%91%29%20%28%E5%BA%94%E7%94%A8%20OR%20%E5%B7%A5%E4%B8%9A%20OR%20%E6%99%BA%E8%83%BD%E5%88%B6%E9%80%A0%20OR%20%E8%BD%A6%E8%81%94%E7%BD%91%20OR%20%E5%AE%89%E5%85%A8%29&hl=zh-CN&gl=CN&ceid=CN:zh-Hans",
+        "enabled": true,
+        "category": "edge-iot-application-media-cn",
+        "fetch_limit": 15
       },
       {
         "name": "Google News - Reinforcement Learning",

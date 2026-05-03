@@ -30,6 +30,12 @@ _ANCHOR_ID_RE = re.compile(r"<a\s+[^>]*id=[\"'][^\"']+[\"'][^>]*>\s*</a>", re.IG
 _HTML_TAG_RE = re.compile(r"<[^>]+>")
 
 
+def _format_score(score: float | None) -> str:
+    if score is None:
+        return "?"
+    return f"{score:g}"
+
+
 def _truncate(value: str, limit: int, split: str) -> str:
     """Truncate a string to at most *limit* characters by splitting on *split*.
 
@@ -338,7 +344,7 @@ class WebhookNotifier:
 
         for item_index, item in enumerate(important_items, start=1):
             title = str(item.metadata.get(f"title_{lang}") or item.title)
-            score = item.ai_score or "?"
+            score = _format_score(item.ai_score)
             panel_title = f"{item_index}. {title} ⭐️ {score}/10"
             item_content = summarizer.generate_webhook_item(
                 item,
